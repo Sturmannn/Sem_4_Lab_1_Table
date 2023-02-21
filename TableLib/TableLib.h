@@ -1,4 +1,4 @@
-
+#include <cstdlib>
 template<typename key, typename data>
 
 class TMap
@@ -62,7 +62,7 @@ inline data& TMap<key, data>::operator[](const key* k)
 template<typename key, typename data>
 inline data& TMap<key, data>::Find(const key& k)
 {
-  // TODO: вставьте здесь оператор return
+  // TODO: ГўГ±ГІГ ГўГјГІГҐ Г§Г¤ГҐГ±Гј Г®ГЇГҐГ°Г ГІГ®Г° return
 }
 
 template<typename key, typename data>
