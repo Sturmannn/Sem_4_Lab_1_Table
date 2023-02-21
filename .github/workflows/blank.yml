@@ -27,7 +27,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: cmake
-        run: cmake
+        run: cmake .
         
 
       - name: make
