@@ -14,9 +14,9 @@
 //    EXPECT_EQ(3, bf.GetLength());
 //}
 
-TEST(TBitField, can_add)
-{
-    int n = 4;
-    int m = 5;
-    EXPECT_EQ(9, Add(n, m));
-}
+//TEST(TBitField, can_add)
+//{
+//    int n = 4;
+//    int m = 5;
+//    EXPECT_EQ(9, Add(n, m));
+//}
