@@ -6,21 +6,21 @@ project(${PROJECT_NAME}) # Название проекта
 set (tableLib TableLib) #Переменная с именем библиотеки
 set (test Test)	#Переменная с именем приложения
 set (sample Samples)
-set (testLib TestLib)
+set (testLib GTestLib)
  
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE) #Создается переменная CMAKE_CONFIGURATION_TYPES со значением "Debug;Release" и меткой/разделом Configs, переменная сохраниется в специальном файле доступном из всех файлов,
 if(NOT CMAKE_BUILD_TYPE) # проверка имеющихся у компилятора вариантов сборки
   set(CMAKE_BUILD_TYPE Release) #Если нет то устанавливаем Release
 endif()
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/TestLib)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/GTestLib)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/TableLib) #Добавляем директорию "${CMAKE_CURRENT_SOURCE_DIR}/vectorlib" в дополняемые каталоги включаемых файлов
 #${CMAKE_CURRENT_SOURCE_DIR} - стандартная переменная с адресом рабочей директории
 
 add_subdirectory(TableLib) #Добавляем директорию с под-CMakeList-ом, и выполняем под-CMakeList
 add_subdirectory(Test)
 add_subdirectory(Samples)
-add_subdirectory(TestLib)
+add_subdirectory(GTestLib)
 
 #file(GLOB hdrs "*.h*") #Добавляем в переменную hdrs все файлы с расширением .h
 #file(GLOB srcs "*.cpp") #Добавляем в переменную srcs все файлы с расширением .cpp
