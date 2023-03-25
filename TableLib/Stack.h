@@ -1,4 +1,6 @@
-template <typename T>
+#pragma once
+
+template <class T>
 class TStack
 {
 protected:
@@ -23,7 +25,7 @@ public:
 
 };
 
-template<typename T>
+template<class T>
 inline TStack<T>::TStack(int sz)
 {
   if (sz < 1)
@@ -33,7 +35,7 @@ inline TStack<T>::TStack(int sz)
   pMem = new T[size];
 }
 
-template<typename T>
+template<class T>
 inline TStack<T>::TStack(const TStack<T>& p)
 {
   if (p.pMem == nullptr)
@@ -52,7 +54,7 @@ inline TStack<T>::TStack(const TStack<T>& p)
   }
 }
 
-template<typename T>
+template<class T>
 inline TStack<T>::TStack(TStack<T>&& p)
 {
   size = p.size;
@@ -64,7 +66,7 @@ inline TStack<T>::TStack(TStack<T>&& p)
   p.top = -1;
 }
 
-template<typename T>
+template<class T>
 inline TStack<T>::~TStack()
 {
   if (pMem != nullptr)
@@ -76,13 +78,13 @@ inline TStack<T>::~TStack()
   top = -1;
 }
 
-template<typename T>
+template<class T>
 inline size_t TStack<T>::Size() const
 {
   return top + 1;
 }
 
-template<typename T>
+template<class T>
 inline bool TStack<T>::isEmpty() const
 {
   if (top == -1)
@@ -90,7 +92,7 @@ inline bool TStack<T>::isEmpty() const
   return false;
 }
 
-template<typename T>
+template<class T>
 inline bool TStack<T>::isFull() const
 {
   if (top == size - 1)
@@ -98,7 +100,7 @@ inline bool TStack<T>::isFull() const
   return false;
 }
 
-template<typename T>
+template<class T>
 inline void TStack<T>::Push(const T& val)
 {
   if (isFull() == true)
@@ -106,7 +108,7 @@ inline void TStack<T>::Push(const T& val)
   pMem[++top] = val;
 }
 
-template<typename T>
+template<class T>
 inline T TStack<T>::Pop()
 {
   if (isEmpty() == true)
@@ -114,7 +116,7 @@ inline T TStack<T>::Pop()
   return pMem[top--];
 }
 
-template<typename T>
+template<class T>
 inline T TStack<T>::Top()
 {
   return pMem[top];

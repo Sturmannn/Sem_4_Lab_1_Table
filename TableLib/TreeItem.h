@@ -1,49 +1,85 @@
+#pragma once
+
 #include "Item.h"
-template <typename key, typename data>
-class TTreeItem : public TItem<key,data>
+
+template <typename Key, typename Data>
+class TTreeItem : public TItem<Key,Data>
 {
 protected:
-  TTreeItem<key, data>* left;
-  TTreeItem<key, data>* right;
+  TTreeItem<Key, Data>* left;
+  TTreeItem<Key, Data>* right;
 public:
-  TTreeItem(TTreeItem<key, data>* l, TTreeItem<key, data>* r, key* k = nullptr, data* d = nullptr);
-  TTreeItem(const TTreeItem<key, data>& p);
-  TTreeItem<key, data>* GetLeft();
-  TTreeItem<key, data>* GetRight();
-  void SetLeft(TTreeItem<key, data>* l);
-  void SetRight(TTreeItem<key, data>* r);
+  TTreeItem();
+  TTreeItem(Data* d, Key* k);
+  TTreeItem(TTreeItem<Key, Data>* l, TTreeItem<Key, Data>* r, Key* k = nullptr, Data* d = nullptr);
+  TTreeItem(const TTreeItem<Key, Data>& p);
+  TTreeItem<Key, Data>* GetLeft();
+  TTreeItem<Key, Data>* GetRight();
+  void SetLeft(TTreeItem<Key, Data>* l);
+  void SetRight(TTreeItem<Key, Data>* r);
 };
 
-template<typename key, typename data>
-inline TTreeItem<key, data>::TTreeItem(TTreeItem<key, data>* l, TTreeItem<key, data>* r, key* k, data* d)
+template<typename Key, typename Data>
+inline TTreeItem<Key, Data>::TTreeItem()
 {
-
+  key = nullptr;
+  data = nullptr;
+  left = nullptr;
+  right = nullptr;
 }
 
-template<typename key, typename data>
-inline TTreeItem<key, data>::TTreeItem(const TTreeItem<key, data>& p)
+template<typename Key, typename Data>
+inline TTreeItem<Key, Data>::TTreeItem(Data* d, Key* k)
 {
-
+  key = k;
+  data = d;
+  left = nullptr;
+  right = nullptr;
 }
 
-template<typename key, typename data>
-inline TTreeItem<key, data>* TTreeItem<key, data>::GetLeft()
+template<typename Key, typename Data>
+inline TTreeItem<Key, Data>::TTreeItem(TTreeItem<Key, Data>* l, TTreeItem<Key, Data>* r, Key* k, Data* d)
 {
-  return nullptr;
+  this = new TItem<Key, Data>(k, d);//?? 
+  if (left == nullptr)
+    left = l;
+  else
+    throw "can't build left part, because its already built";
+  if (right == nullptr)
+    right = r;
+  else
+    throw "can't build right part, because its already built";
 }
 
-template<typename key, typename data>
-inline TTreeItem<key, data>* TTreeItem<key, data>::GetRight()
+template<typename Key, typename Data>
+inline TTreeItem<Key, Data>::TTreeItem(const TTreeItem<Key, Data>& p)
 {
-  return nullptr;
+  key = p.key;
+  data = p.data;
+  left = p.left;
+  right = p.right;
 }
 
-template<typename key, typename data>
-inline void TTreeItem<key, data>::SetLeft(TTreeItem<key, data>* l)
+template<typename Key, typename Data>
+inline TTreeItem<Key, Data>* TTreeItem<Key, Data>::GetLeft()
 {
+  return left;
 }
 
-template<typename key, typename data>
-inline void TTreeItem<key, data>::SetRight(TTreeItem<key, data>* r)
+template<typename Key, typename Data>
+inline TTreeItem<Key, Data>* TTreeItem<Key, Data>::GetRight()
 {
+  return right;
+}
+
+template<typename Key, typename Data>
+inline void TTreeItem<Key, Data>::SetLeft(TTreeItem<Key, Data>* l)
+{
+  left = l;
+}
+
+template<typename Key, typename Data>
+inline void TTreeItem<Key, Data>::SetRight(TTreeItem<Key, Data>* r)
+{
+  right = r;
 }

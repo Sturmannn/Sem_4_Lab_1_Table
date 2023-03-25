@@ -1,54 +1,87 @@
-template<typename key,typename data>
+#pragma once
+
+template<typename Key,typename Data>
 class TItem
 {
 protected:
-	key* ke;
-	data* dat;
+	Key* key;
+	Data* data;
 public:
-	TItem(key* k = nullptr, data* d = nullptr);
-	key* GetKey();
-	void SetKey(key* k);
-	data* GetData();
-	void SetData(data* d);
-	bool operator==(const TItem<key, data>& p);
-
+	TItem(Key* k = nullptr, Data* d = nullptr);
+	Key& GetKey();
+	Key*& GetKeyAddress();
+	void SetKey(Key* k);
+	Data& GetData();
+	Data*& GetDataAddress();
+	void SetData(Data* d);
+	bool operator==(const TItem<Key, Data>& p);
+	bool operator<(const TItem<Key, Data>& p);
+	bool operator>(const TItem<Key, Data>& p);
 };
 
-template<typename key, typename data>
-inline TItem<key, data>::TItem(key* k, data* d)
+template<typename Key, typename Data>
+inline TItem<Key, Data>::TItem(Key* k, Data* d)
 {
 	key = k;
 	data = d;
 }
 
-template<typename key, typename data>
-inline key* TItem<key, data>::GetKey()
+template<typename Key, typename Data>
+inline Key& TItem<Key, Data>::GetKey()
 {
-	return ke;
+	return *key;
 }
 
-template<typename key, typename data>
-inline void TItem<key, data>::SetKey(key* k)
+template<typename Key, typename Data>
+inline Key*& TItem<Key, Data>::GetKeyAddress()
 {
-	ke = k;
+	return key;
 }
 
-template<typename key, typename data>
-inline data* TItem<key, data>::GetData()
+template<typename Key, typename Data>
+inline void TItem<Key, Data>::SetKey(Key* k)
 {
-	return dat;
+	key = k;
 }
 
-template<typename key, typename data>
-inline void TItem<key, data>::SetData(data* d)
+template<typename Key, typename Data>
+inline Data& TItem<Key, Data>::GetData()
 {
-	dat = d;
+	return *data;
 }
 
-template<typename key, typename data>
-inline bool TItem<key, data>::operator==(const TItem<key, data>& p)
+template<typename Key, typename Data>
+inline Data*& TItem<Key, Data>::GetDataAddress()
 {
-	if (this->ke == p.key)
+	return data;
+}
+
+template<typename Key, typename Data>
+inline void TItem<Key, Data>::SetData(Data* d)
+{
+	data = d;
+}
+
+template<typename Key, typename Data>
+inline bool TItem<Key, Data>::operator==(const TItem<Key, Data>& p)
+{
+	if (this->key == p.key)
+		return true;
+	return false;
+}
+
+template<typename Key, typename Data>
+inline bool TItem<Key, Data>::operator<(const TItem<Key, Data>& p)
+{
+	if (this->key < p.key)
+		return true;
+	return false;
+}
+
+template<typename Key, typename Data>
+inline bool TItem<Key, Data>::operator>(const TItem<Key, Data>& p)
+{
+	if (this->key > p.key)
 		return true;
 	return false;
 }
