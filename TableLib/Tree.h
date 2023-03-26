@@ -12,6 +12,9 @@ protected:
   mutable int count;
   mutable TTreeItem<Key, Data>* root;
 public:
+
+  TTreeItem<Key, Data>* GetRoot() { return root; }
+
   TTreeMap();
   TTreeMap(const TTreeMap<Key, Data>& p);
   ~TTreeMap();
@@ -23,6 +26,10 @@ public:
   const void Add(Key* k, Data* d) const;
   void Delete(Key* k);
   void Add(TTreeItem<Key, Data>* tree);
+  void Add(TTreeMap<Key, Data>& tree);
+  TTreeItem<Key, Data>*& FindItem(Key* k);
+  TQueue<char> Path(Key* k);
+  TTreeItem<Key, Data>*& FindItem(TQueue<char>& p);
 };
 
 template<typename Key, typename Data>
@@ -274,7 +281,20 @@ inline void TTreeMap<Key, Data>::Delete(Key* k)
   if (root == nullptr)
     throw "Error : root == nullptr";
 
+  try
+  {
+    this->Find(k);
+  }
+  catch (const char* msg)
+  {
+    this->Add(k, new Data());
+  }
+
   TTreeItem<Key, Data>* temp = root;
+  TTreeItem<Key, Data>* temp1 = root;
+  TQueue<char> path(this->Path(k));
+  TQueue<TTreeItem<Key, Data>*> q(count);
+
   if (temp->GetKey() == *k)
   {
     this->TTreeMap::~TTreeMap();
@@ -285,27 +305,184 @@ inline void TTreeMap<Key, Data>::Delete(Key* k)
     {
       if (temp->GetKey() < *k)
       {
-        if (temp->GetRight()->GetKey() == *k)
-        {
-          //
-        }
         temp = temp->GetRight();
+        if (temp->GetKey() == *k)
+        {
+          while (1)
+          {
+            if (temp->GetLeft() != nullptr)
+              q.Push(temp->GetLeft());
+            if (temp->GetRight() != nullptr)
+              q.Push(temp->GetRight());
+            if (temp->GetRight() != nullptr || temp->GetLeft() != nullptr)
+            {
+              delete temp;
+              temp = q.Pop();
+            }
+            else
+            {
+              delete temp;
+              while (temp1 != nullptr)
+              {
+                if (path.Size() == 1)
+                {
+                  if (path.Pop() == 'r')
+                  {
+                    temp1->SetRight(nullptr);
+                    break;
+                  }
+                  else if (path.Pop() == 'l')
+                  {
+                    temp1->SetLeft(nullptr);
+                    break;
+                  }
+                }
+                if (path.Pop() == 'r')
+                  temp1 = temp1->GetRight();
+                else if (path.Pop() == 'l')
+                  temp1 = temp1->GetLeft();
+              }
+              count--;
+              goto exit;
+            }
+            count--;
+          }
+        }
       }
       else if (temp->GetKey() > *k)
       {
 
-        if (temp->GetLeft()->GetKey() == *k)
-        {
-          //
-        }
         temp = temp->GetLeft();
+        if (temp->GetKey() == *k)
+        {
+          while (1)
+          {
+            if (temp->GetLeft() != nullptr)
+              q.Push(temp->GetLeft());
+            if (temp->GetRight() != nullptr)
+              q.Push(temp->GetRight());
+            if (temp->GetRight() != nullptr || temp->GetLeft() != nullptr)
+            {
+              delete temp;
+              temp = q.Pop();
+            }
+            else
+            {
+              delete temp;
+              while (temp1 != nullptr)
+              {
+                if (path.Size() == 1)
+                {
+                  if (path.Pop() == 'r')
+                  {
+                    temp1->SetRight(nullptr);
+                    break;
+                  }
+                  else if (path.Pop() == 'l')
+                  {
+                    temp1->SetLeft(nullptr);
+                    break;
+                  }
+                }
+                if (path.Pop() == 'r')
+                  temp1 = temp1->GetRight();
+                else if (path.Pop() == 'l')
+                  temp1 = temp1->GetLeft();
+              }
+              count--;
+              goto exit;
+            }
+            count--;
+          }
+        }
       }
     }
   }
+exit:;
 }
 
 template<typename Key, typename Data>
 inline void TTreeMap<Key, Data>::Add(TTreeItem<Key, Data>* tree)
 {
-  //
+  if (tree == nullptr)
+    throw "Nothing to add";
+  TTreeItem<Key, Data>* temp = root;
+  while (1)
+  {
+    if (temp == nullptr)
+    {
+      temp = new TTreeItem<Key, Data>(*tree);
+      break;
+    }
+    else if (temp->GetKey() < tree->GetKey())
+      temp = temp->GetRight();
+    else if (temp->GetKey() > tree->GetKey())
+      temp = temp->GetLeft();
+    else if (temp->GetKey() == tree->GetKey())
+      throw "Keys cant be equal";
+  }
+}
+
+template<typename Key, typename Data>
+inline void TTreeMap<Key, Data>::Add(TTreeMap<Key, Data>& p)
+{
+  (*this).Add(p.GetRoot());
+}
+
+template<typename Key, typename Data>
+inline TTreeItem<Key, Data>*& TTreeMap<Key, Data>::FindItem(Key* k)
+{
+  if (root == nullptr)
+    throw "Error : root == nullptr";
+  TTreeItem<Key, Data>* temp = root;
+  while (temp != nullptr)
+  {
+    if (temp->GetKey() == *k)
+      return temp;
+    else if (temp->GetKey() < *k)
+      temp = temp->GetRight();
+    else if (temp->GetKey() > *k)
+      temp = temp->GetLeft();
+  }
+}
+
+template<typename Key, typename Data>
+inline TQueue<char> TTreeMap<Key, Data>::Path(Key* k)
+{
+  if (root == nullptr)
+    throw "Error : root == nullptr";
+  TQueue<char> tmp(count);
+  TTreeItem<Key, Data>* temp = root;
+  while (temp != nullptr)
+  {
+    if (temp->GetKey() == *k)
+      return tmp;
+    else if (temp->GetKey() < *k)
+    {
+      temp = temp->GetRight();
+      tmp.Push('r');
+    }
+    else if (temp->GetKey() > *k)
+    {
+      temp = temp->GetLeft();
+      tmp.Push('l');
+    }
+  }
+}
+
+template<typename Key, typename Data>
+inline TTreeItem<Key, Data>*& TTreeMap<Key, Data>::FindItem(TQueue<char>& p)
+{
+  if (root == nullptr)
+    throw "Error : root == nullptr";
+  TTreeItem<Key, Data>* temp = root;
+  while (temp != nullptr)
+  {
+    if (p.isEmpty())
+      return temp;
+    if (p.Pop() == 'r')
+      temp = temp->GetRight();
+    else if (p.Pop() == 'l')
+      temp = temp->GetLeft();
+  }
 }

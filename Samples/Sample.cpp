@@ -25,10 +25,14 @@ int main()
   TTreeMap<char*, int> a;
   char* c1 = "First";
   char* c2 = "Second";
+  char* c3 = "Third";
+  char* c4 = "Fourth";
   int b = 5;
   a.Add(&c1, &b);
   a.Add(&c2, &b);
+  a.Add(&c3, &b);
   TTreeMap<char*, int> v(a);
   v.Delete(&c2);
+  v.Add(a.GetRoot()->GetRight());
   return 0;
 }

@@ -35,6 +35,8 @@ inline TQueue<T>::TQueue(int sz)
   size = 0;
   this->sz = sz;
   pMem = new T[sz];
+  for (int i = 0; i < sz; i++)
+    pMem[i] = T(0);
 }
 
 template<typename T>
