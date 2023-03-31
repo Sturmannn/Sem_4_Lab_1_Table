@@ -27,12 +27,21 @@ int main()
   char* c2 = "Second";
   char* c3 = "Third";
   char* c4 = "Fourth";
+  char* c5 = "Fith";
+  char* c6 = "Sixth";
+  char* c7 = "Seventh";
   int b = 5;
   a.Add(&c1, &b);
   a.Add(&c2, &b);
   a.Add(&c3, &b);
+  a.Add(&c4, &b);
+  a.Add(&c5, &b);
   TTreeMap<char*, int> v(a);
-  v.Delete(&c2);
-  v.Add(a.GetRoot()->GetRight());
+  TTreeItem<char*, int> k(&b, &c6);
+  TTreeItem<char*, int> k1(&b, &c7);
+  k.SetRight(&k1);
+  v.Add(&k);
+  v.Delete(&c6);
+  v.DeleteSubTree(&c3);
   return 0;
 }

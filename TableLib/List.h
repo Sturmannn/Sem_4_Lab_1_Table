@@ -21,6 +21,7 @@ public:
   T GetStart();
   T GetEnd();
   T& Get(size_t i);
+  int GetCount();
 
   void DelStart();
   void DelEnd();
@@ -28,7 +29,7 @@ public:
   bool IsEmp();
   bool IsFull();
 
-  int GetCount();
+  T& operator[](const size_t i);
 };
 
 template<typename T>
@@ -104,6 +105,22 @@ inline void TList<T>::PushEnd(T data)
 template<typename T>
 inline void TList<T>::Push(T data, size_t i)
 {
+  if (IsFull())
+    throw "Full";
+  if (i < 0 || i > count)
+    throw "Error index";
+
+  TListNode<T>* j = start;
+  int k = 0;
+  while (j != nullptr)
+  {
+    if (k == i)
+      break;
+
+    j = j->GetNext();
+    k++;
+  }
+  return j->GetData();
 }
 
 template<typename T>
@@ -180,6 +197,12 @@ template<typename T>
 inline bool TList<T>::IsFull()
 {
   return false;
+}
+
+template<typename T>
+inline T& TList<T>::operator[](const size_t i)
+{
+  
 }
 
 template<typename T>

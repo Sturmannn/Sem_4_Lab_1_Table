@@ -1,3 +1,5 @@
+#pragma once
+
 #include "List.h"
 #include "Item.h"
 #include "IMap.h"
@@ -34,8 +36,7 @@ inline THMap<Key, Data>::THMap(int s)
 	{
 		size = s;
 		count = 0;
-
-		items = new TList<TItem<KEy, Data>>[size];
+		items = new TList<TItem<Key, Data>>[size];
 	}
 	else
 	{
@@ -83,7 +84,7 @@ inline Data& THMap<Key, Data>::operator[](const Key& k)
 	{
 		if (items[i][j] == k)
 		{
-			return intems[i][j].getData();
+			return items[i][j].getData();
 		}
 	}
 	throw "err";
