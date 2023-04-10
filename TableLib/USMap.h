@@ -32,6 +32,7 @@ public:
 
   friend std::ostream& operator<<(std::ostream& ostr, const TUSMap<Key, Data>& table)
   {
+    if (table.count == 0) return ostr;
     for (int i = 0; i < table.count - 1; i++)
     {
       ostr << *(table.keys[i]) << " - " << *(table.items[i]) << ", ";
@@ -47,7 +48,7 @@ inline int TUSMap<Key, Data>::FindID(Key* _key) const
 {
   for (int i = 0; i < count; i++)
   {
-    if (*(items[i]) == *_key) return i;
+    if (*(keys[i]) == *_key) return i;
   }
   throw "Key doesn't exist!";
 }
@@ -57,7 +58,7 @@ inline const int TUSMap<Key, Data>::FindID(const Key* _key) const
 {
   for (int i = 0; i < count; i++)
   {
-    if (*(items[i]) == *_key) return i;
+    if (*(keys[i]) == *_key) return i;
   }
   throw "Key doesn't exist!";
 }
@@ -128,7 +129,7 @@ inline void TUSMap<Key, Data>::Add(Key* _key, Data* _data)
   if (count == size) throw "The table is overloaded";
   for (int i = 0; i < count; i++)
   {
-    if (*keys[i] == *_key)
+    if (*(keys[i]) == *_key)
     {
       throw "Can't add duplicate key!";
     }
@@ -144,6 +145,7 @@ inline void TUSMap<Key, Data>::Delete(const Key* _key)
   int index = FindID(_key);
   items[index] = items[count - 1];
   keys[index] = keys[count - 1];
+  count--;
 }
 
 template<typename Key, typename Data>

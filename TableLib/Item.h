@@ -69,7 +69,8 @@ inline bool TItem<Key, Data>::operator<(const TItem<Key, Data>& p)
 template<typename Key, typename Data>
 inline bool TItem<Key, Data>::operator>(const TItem<Key, Data>& p)
 {
-  (!TItem<Key, Data>::operator<(const TItem<Key, Data>&p);
+  if (this->key > p.key) return true;
+  return false;
 }
 
 template<typename Key, typename Data>

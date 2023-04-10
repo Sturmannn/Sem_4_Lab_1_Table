@@ -5,7 +5,7 @@
 #include <iostream>
 
 template <typename Key, typename Data>
-class TSMap : public IMap<Key, Data>
+class TSMap : public TIMap<Key, Data>
 {
 protected:
   
@@ -30,9 +30,10 @@ public:
 
   friend std::ostream& operator<<(std::ostream& ostr, const TSMap<Key, Data>& table)
   {
+    if (table.count == 0) return ostr;
     for (int i = 0; i < table.count - 1; i++)
     {
-      ostr << *(table.items[i].GetKey()) << " - " << *(table.items[i].GetData()) << ", ";
+      ostr << *(table.items[i].GetKey()) << " - " << *(table.items[i].GetData()) << ",\n";
     }
     ostr << *(table.items[table.count - 1].GetKey()) << " - " << *(table.items[table.count - 1].GetData()) << " .\n";
     return ostr;
@@ -46,7 +47,7 @@ inline TSMap<Key, Data>::TSMap(int _size)
   if (_size <= 0) throw "Size <= 0!";
   this->size = _size;
   this->count = 0;
-  items = new Item<Key, Data>[size];
+  items = new TItem<Key, Data>[size];
 }
 
 template<typename Key, typename Data>
@@ -60,15 +61,9 @@ inline TSMap<Key, Data>::TSMap(const TSMap<Key, Data>& p)
 }
 
 template<typename Key, typename Data>
-inline TSMap<Key, Data>::~TSMap()
-{
-
-}
-
-template<typename Key, typename Data>
 inline const Data* TSMap<Key, Data>::operator[](const Key* _key) const
 {
-  this->Find(_key);
+  return this->Find(_key);
 }
 
 template<typename Key, typename Data>
@@ -79,9 +74,9 @@ inline const Data* TSMap<Key, Data>::Find(const Key* _key) const
   while (left <= right)
   {
     int middle = (left + right) * 0.5; // —ередина области поиска
-    if (*(items[middle].GetKey()) == *key)
+    if (*(items[middle].GetKey()) == *_key)
       return items[middle].GetData();
-    if (*(items[middle].GetKey()) < *key)
+    if (*(items[middle].GetKey()) < *_key)
       left = middle + 1;
     else
       right = middle - 1;
@@ -92,30 +87,47 @@ inline const Data* TSMap<Key, Data>::Find(const Key* _key) const
 template<typename Key, typename Data>
 inline Data* TSMap<Key, Data>::operator[](Key* _key)
 {
-  this->Find(_key);
+  return this->Find(_key);
 }
 
 template<typename Key, typename Data>
 inline Data* TSMap<Key, Data>::Find(Key* _key)
 {
-  this->Find(_key);
+  int left = 0;
+  int right = count - 1; // изначально границы - весь наш массив
+  while (left <= right)
+  {
+    int middle = (left + right) * 0.5; // —ередина области поиска
+    if (*(items[middle].GetKey()) == *_key)
+      return items[middle].GetData();
+    if (*(items[middle].GetKey()) < *_key)
+      left = middle + 1;
+    else
+      right = middle - 1;
+  }
+  throw "Key doesn't exist";
 }
-
-
 
 template<typename Key, typename Data>
 inline void TSMap<Key, Data>::Add(Key* _key, Data* _data)
 {
   if (count == size) throw "The Map is overloaded!";
+  if (this->IsEmpty())
+  {
+    items[0].SetKey(_key);
+    items[0].SetData(_data);
+    count++;
+    return;
+  }
   int left = 0;
   int right = count - 1; // изначально границы - весь наш массив
   int middle;
   while (left <= right)
   {
     middle = (left + right) * 0.5; // —ередина области поиска
-    if (*(items[middle].GetKey()) == *key)
-      throw "Key already exists!"
-    if (*(items[middle].GetKey()) < *key)
+    if (*(items[middle].GetKey()) == *_key)
+      throw "Key already exists!";
+    if (*(items[middle].GetKey()) < *_key)
       left = middle + 1;
     else
       right = middle - 1;
@@ -139,20 +151,20 @@ inline void TSMap<Key, Data>::Delete(const Key* _key)
   while (left <= right)
   {
     middle = (left + right) * 0.5; // —ередина области поиска
-    if (*(items[middle].GetKey()) == *key)
+    if (*(items[middle].GetKey()) == *_key)
     {
       flag = true;
       break;
     }
-    if (*(items[middle].GetKey()) < *key)
+    if (*(items[middle].GetKey()) < *_key)
       left = middle + 1;
     else
       right = middle - 1;
   }
-  if (!flag) throw "Key doesn't exist yet!"
+  if (!flag) throw "Key doesn't exist yet!";
   items[middle].SetKey(nullptr);
   items[middle].SetData(nullptr);
-  for (int i = midd; i != count - 1; i++)
+  for (int i = middle; i != count - 1; i++)
     items[i] = items[i + 1];
   count--;
 }
