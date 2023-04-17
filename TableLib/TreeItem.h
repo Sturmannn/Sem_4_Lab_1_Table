@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Item.h"
-#define _MAX_SIZE_ 2147483
+#define MAX_SIZE 2147483
 
 template <typename Key, typename Data>
 class TTreeItem : public TItem<Key,Data>
@@ -22,6 +22,7 @@ public:
 
   TTreeItem<Key, Data>* Copy(TTreeItem<Key, Data>* p);
   int GetCount();
+  int BalanceFactor();
 };
 
 template<typename Key, typename Data>
@@ -45,7 +46,7 @@ inline TTreeItem<Key, Data>::TTreeItem(Data* d, Key* k)
 template<typename Key, typename Data>
 inline TTreeItem<Key, Data>::TTreeItem(TTreeItem<Key, Data>* l, TTreeItem<Key, Data>* r, Key* k, Data* d)
 {
-  this = new TItem<Key, Data>(k, d);//?? 
+  this = new TItem<Key, Data>(k, d);
   if (left == nullptr)
     left = l;
   else
@@ -128,7 +129,7 @@ template<typename Key, typename Data>
 inline int TTreeItem<Key, Data>::GetCount()
 {
   TTreeItem<Key, Data>* temp1 = this;
-  TStack<TTreeItem<Key, Data>*> s(_MAX_SIZE_);
+  TStack<TTreeItem<Key, Data>*> s(MAX_SIZE);
   int count = 1;
   s.Push(nullptr);
 
@@ -145,4 +146,10 @@ inline int TTreeItem<Key, Data>::GetCount()
       count++;
   }
   return count;
+}
+
+template<typename Key, typename Data>
+inline int TTreeItem<Key, Data>::BalanceFactor()
+{
+  return this->GetRight()->GetCount() - this->GetLeft()->GetCount();
 }

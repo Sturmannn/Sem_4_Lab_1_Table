@@ -1,11 +1,11 @@
 #include "gtest.h"
-#include "Tree.h"
+#include "HMap.h"
 
-TEST(TTree, can_create_tree)
+TEST(THMAP, can_create_hmap)
 {
   try
   {
-    TTree<char*, int> a();
+    THMap<char*, int> a();
   }
   catch (...)
   {
@@ -13,25 +13,25 @@ TEST(TTree, can_create_tree)
   }
 }
 
-TEST(TTree, can_add_element)
+TEST(THMAP, can_add_element)
 {
-  TTree<char*, int> a;
+  THMap<char*, int> a;
   char* c1 = "First";
   int b = 5;
   ASSERT_NO_THROW(a.Add(&c1, &b));
 }
 
-TEST(TTree, can_copy_tree)
+TEST(THMAP, can_copy_hmap)
 {
-  TTree<char*, int> a;
+  THMap<char*, int> a;
   char* c1 = "First";
   char* c2 = "Second";
   int b = 5;
   a.Add(&c1, &b);
   a.Add(&c2, &b);
-  try 
+  try
   {
-    TTree<char*, int> v(a);
+    THMap<char*, int> v(a);
   }
   catch (...)
   {
@@ -39,18 +39,18 @@ TEST(TTree, can_copy_tree)
   }
 }
 
-TEST(TTree, can_find_element)
+TEST(THMAP, can_find_element)
 {
-  TTree<char*, int> a;
+  THMap<char*, int> a;
   char* c1 = "First";
   int b = 5;
   a.Add(&c1, &b);
   EXPECT_EQ(b, a.Find(&c1));
 }
 
-TEST(TTree, cant_find_non_existen_element)
+TEST(THMAP, cant_find_non_existen_element)
 {
-  TTree<char*, int> a;
+  THMap<char*, int> a;
   char* c1 = "First";
   char* c2 = "Second";
   int b = 5;
@@ -58,18 +58,18 @@ TEST(TTree, cant_find_non_existen_element)
   ASSERT_ANY_THROW(a.Find(&c2));
 }
 
-TEST(TTree, can_delete_element_1)
+TEST(THMAP, can_delete_element_1)
 {
-  TTree<char*, int> a;
+  THMap<char*, int> a;
   char* c1 = "First";
   int b = 5;
   a.Add(&c1, &b);
   ASSERT_NO_THROW(a.Delete(&c1));
 }
 
-TEST(TTree, can_delete_element_2)
+TEST(THMAP, can_delete_element_2)
 {
-  TTree<char*, int> a;
+  THMap<char*, int> a;
   char* c1 = "First";
   char* c2 = "Second";
   int b = 5;
@@ -78,38 +78,30 @@ TEST(TTree, can_delete_element_2)
   ASSERT_NO_THROW(a.Delete(&c2));
 }
 
-TEST(TTree, can_add_tree_item)
+TEST(THMAP, can_delete_element_3)
 {
-  TTree<char*, int> a;
-  TTreeItem<char*, int> d;
-  TTreeItem<char*, int> d1;
+  THMap<char*, int> a;
   char* c1 = "First";
   char* c2 = "Second";
   char* c3 = "Third";
-  char* c4 = "Ta";
-  int b = 5;
-  d.SetKey(&c3);
-  d.SetData(&b);
-  d1.SetKey(&c4);
-  d1.SetData(&b);
-  d.SetRight(&d1);
+  int b = 5, c = 10;
   a.Add(&c1, &b);
   a.Add(&c2, &b);
-  ASSERT_NO_THROW(a.Add(&d));
+  a.Add(&c3, &b);
+  a.Add(&c3, &c);
+  ASSERT_NO_THROW(a.Delete(&c3));
 }
 
-TEST(TTree, can_add_tree)
+TEST(THMAP, can_delete_element_4)
 {
-  TTree<char*, int> a;
-  TTree<char*, int> d;
+  THMap<char*, int> a;
   char* c1 = "First";
   char* c2 = "Second";
   char* c3 = "Third";
-  char* c4 = "Ta";
-  int b = 5;
-  d.Add(&c3, &b);
-  d.Add(&c4, &b);
+  int b = 5, c = 10, d = 20;
   a.Add(&c1, &b);
-  a.Add(&c2, &b);
-  ASSERT_NO_THROW(a.Add(d));
+  a.Add(&c3, &b);
+  a.Add(&c3, &c);
+  a.Add(&c3, &d);
+  ASSERT_NO_THROW(a.Delete(&c3));
 }
