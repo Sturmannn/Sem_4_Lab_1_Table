@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Item.h"
+#include "Queue.h"
+#include "Stack.h"
+#include <vector>
 #define MAX_SIZE 2147483
 
 template <typename Key, typename Data>
@@ -21,8 +24,9 @@ public:
   void SetRight(TTreeItem<Key, Data>* r);
 
   TTreeItem<Key, Data>* Copy(TTreeItem<Key, Data>* p);
+  TQueue<char> PathItem(TTreeItem<Key, Data>* p, Key* k);
   int GetCount();
-  int BalanceFactor();
+  int GetHeight(TTreeItem<Key, Data>* p);
 };
 
 template<typename Key, typename Data>
@@ -126,8 +130,39 @@ inline TTreeItem<Key, Data>* TTreeItem<Key, Data>::Copy(TTreeItem<Key, Data>* tr
 }
 
 template<typename Key, typename Data>
+inline TQueue<char> TTreeItem<Key, Data>::PathItem(TTreeItem<Key, Data>* p, Key* k)
+{
+  if (this == nullptr)
+    throw "Error : root == nullptr";
+  TQueue<char> tmp(p->GetCount());
+  TTreeItem<Key, Data>* temp = p;
+  if (temp->GetKey() == *k)
+  {
+    tmp.Push('n');
+    return tmp;
+  }
+
+  while (temp != nullptr) {
+    if (temp->GetKey() == *k)
+      return tmp;
+
+    else if (temp->GetKey() < *k) {
+      temp = temp->GetRight();
+      tmp.Push('r');
+    }
+    else if (temp->GetKey() > *k) {
+      temp = temp->GetLeft();
+      tmp.Push('l');
+    }
+  }
+}
+
+template<typename Key, typename Data>
 inline int TTreeItem<Key, Data>::GetCount()
 {
+  if (this == nullptr)
+    return 0;
+
   TTreeItem<Key, Data>* temp1 = this;
   TStack<TTreeItem<Key, Data>*> s(MAX_SIZE);
   int count = 1;
@@ -142,14 +177,40 @@ inline int TTreeItem<Key, Data>::GetCount()
     temp1 = s.Pop();
     if (temp1 == nullptr)
       break;
-    else
-      count++;
+    count++;
   }
   return count;
 }
 
-template<typename Key, typename Data>
-inline int TTreeItem<Key, Data>::BalanceFactor()
+template<class Key, class Data>
+inline int TTreeItem<Key, Data>::GetHeight(TTreeItem<Key, Data>* p)
 {
-  return this->GetRight()->GetCount() - this->GetLeft()->GetCount();
+  if (this == nullptr)
+    return 0;
+
+  int c = GetCount();
+  TTreeItem<Key, Data>* temp1 = this;
+  std::vector<TQueue<char>> s1;
+  TStack<TTreeItem<Key, Data>*> s(c);
+  s.Push(nullptr);
+  int result = 0, height = 0;
+
+  while (1) {
+    TQueue<char> t = PathItem(p, temp1->GetKeyAddress());
+    s1.push_back(t);
+    if (temp1->GetLeft() != nullptr)
+      s.Push(temp1->GetLeft());
+    if (temp1->GetRight() != nullptr)
+      s.Push(temp1->GetRight());
+    temp1 = s.Pop();
+    if (temp1 == nullptr)
+      break;
+  }
+
+  for (int i = 0; i < c; i++) {
+    height = s1[i].Size();
+    if (result < height)
+      result = height;
+  }
+  return result;
 }

@@ -29,7 +29,7 @@ public:
   void Delete(Key* k);
   void DeleteSubTree(Key* k);
   void Add(TTreeItem<Key, Data>* tree);
-  void Add(TTree<Key, Data>& tree);
+  void Add(TTree<Key, Data> tree);
 
   TTreeItem<Key, Data>*& FindItem(Key* k);
   TQueue<char> Path(Key* k);
@@ -48,7 +48,7 @@ inline TTree<Key, Data>::TTree(const TTree<Key, Data>& p)
 {
   if (p.root == nullptr) {
     root = nullptr;
-    count = p.count;
+    count = 0;
   }
   else {
     TTreeItem<Key, Data> *A, *B;
@@ -78,19 +78,18 @@ inline TTree<Key, Data>::TTree(const TTree<Key, Data>& p)
 template<typename Key, typename Data>
 inline TTree<Key, Data>::~TTree()
 {
-  if (root != nullptr) {
+  if (root != nullptr)
+  {
     TQueue<TTreeItem<Key, Data>*> q(count);
-    while (count != 0) {
+    while (count != 0)
+    {
       if (root->GetLeft() != nullptr)
         q.Push(root->GetLeft());
       if (root->GetRight() != nullptr)
         q.Push(root->GetRight());
-      if (root->GetRight() != nullptr || root->GetLeft() != nullptr) {
-        delete root;
+      delete root;
+      if (q.Top() != nullptr)
         root = q.Pop();
-      }
-      else
-        delete root;
       count--;
     }
     root = nullptr;
@@ -306,7 +305,7 @@ inline void TTree<Key, Data>::Delete(Key* k)
       }
     }
 
-    else if (temp->GetKey() < *k)
+    if (temp->GetKey() < *k)
       temp = temp->GetRight();
     else if (temp->GetKey() > *k)
       temp = temp->GetLeft();
@@ -354,25 +353,28 @@ inline void TTree<Key, Data>::DeleteSubTree(Key* k)
           }
           else  {
             delete temp;
-            while (temp1 != nullptr) {
-              if (path.Size() == 1) {
-                if (path.Pop() == 'r') {
-                  temp1->SetRight(nullptr);
-                  break;
-                }
+            if (q.isEmpty()) {
+              while (temp1 != nullptr) {
+                if (path.Size() == 1) {
+                  if (path.Pop() == 'r') {
+                    temp1->SetRight(nullptr);
+                    break;
+                  }
 
-                else if (path.Pop() == 'l')  {
-                  temp1->SetLeft(nullptr);
-                  break;
+                  else if (path.Pop() == 'l') {
+                    temp1->SetLeft(nullptr);
+                    break;
+                  }
                 }
+                if (path.Pop() == 'r')
+                  temp1 = temp1->GetRight();
+                else
+                  temp1 = temp1->GetLeft();
               }
-              if (path.Pop() == 'r')
-                temp1 = temp1->GetRight();
-              else if (path.Pop() == 'l')
-                temp1 = temp1->GetLeft();
+              count--;
+              goto exit;
             }
-            count--;
-            goto exit;
+            temp = q.Pop();
           }
           count--;
         }
@@ -386,10 +388,10 @@ template<typename Key, typename Data>
 inline void TTree<Key, Data>::Add(TTreeItem<Key, Data>* tree)
 {
   if (tree == nullptr)
-    throw "Nothing to add";
+    return;
 
   TTreeItem<Key, Data>* temp = root, * temp1 = nullptr, * temp2 = tree;
-  temp1 = temp1->Copy(tree);                                            //full copy of tree, but with another address
+  temp1 = temp1->Copy(tree);                                           //full copy of tree, but with another address
   TStack<TTreeItem<Key, Data>*> s(temp2->GetCount());
   s.Push(nullptr);
   char flag = '\0';
@@ -443,9 +445,9 @@ inline void TTree<Key, Data>::Add(TTreeItem<Key, Data>* tree)
 }
 
 template<typename Key, typename Data>
-inline void TTree<Key, Data>::Add(TTree<Key, Data>& p)
+inline void TTree<Key, Data>::Add(TTree<Key, Data> tree)
 {
-  (*this).Add(p.GetRoot());
+  (*this).Add(tree.GetRoot());
 }
 
 template<typename Key, typename Data>

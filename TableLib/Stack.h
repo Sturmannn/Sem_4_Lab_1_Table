@@ -22,7 +22,6 @@ public:
   void Push(const T& val);
   T Pop();
   T Top();
-
 };
 
 template<class T>

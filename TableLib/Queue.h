@@ -10,7 +10,7 @@ protected:
   size_t head;//first element id
   size_t tail;//last element id
 public:
-  TQueue(int sz = 1);
+  TQueue(int sz = 100);
   TQueue(const TQueue<T>& p);
   TQueue(TQueue<T>&& p);
   ~TQueue();
@@ -23,6 +23,8 @@ public:
   void Push(const T& val);
   T Pop();
   T Top();
+
+  bool operator ==(const TQueue<T>& p);
 };
 
 template<typename T>
@@ -139,4 +141,17 @@ template<class T>
 inline T TQueue<T>::Top()
 {
   return pMem[head];
+}
+
+template<class T>
+inline bool TQueue<T>::operator==(const TQueue<T>& p)
+{
+  TQueue<T> tmp = p, tmp1 = *this;
+  if (tmp.Size() != tmp1.Size())
+    return false;
+  while (!tmp.isEmpty()) {
+    if (tmp.Pop() != tmp1.Pop())
+      return false;
+  }
+  return true;
 }
